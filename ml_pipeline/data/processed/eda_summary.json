@@ -1,0 +1,47 @@
+{
+    "total_samples": 300,
+    "real_count": 150,
+    "fake_count": 150,
+    "fake_percentage": 50.0,
+    "avg_words_fake": 50.93,
+    "avg_words_real": 51.47,
+    "top_fake_words": {
+        "alert": 160,
+        "bombshell": 160,
+        "global": 160,
+        "urgent": 150,
+        "revelation": 150,
+        "share": 150,
+        "uncensored": 150,
+        "bulletin": 150,
+        "immediately": 150,
+        "internet": 150,
+        "censor": 150,
+        "shadowy": 150,
+        "elite": 150,
+        "scrub": 150,
+        "video": 150
+    },
+    "top_real_words": {
+        "official": 310,
+        "report": 170,
+        "across": 170,
+        "regional": 170,
+        "confirmed": 160,
+        "framework": 160,
+        "washington": 150,
+        "london": 150,
+        "tokyo": 150,
+        "senior": 150,
+        "industry": 150,
+        "analyst": 150,
+        "briefing": 150,
+        "comprehensive": 150,
+        "review": 150
+    },
+    "charts": {
+        "class_distribution": "plots/class_distribution.png",
+        "word_count_distribution": "plots/word_count_distribution.png",
+        "top_words_comparison": "plots/top_words_comparison.png"
+    }
+}
