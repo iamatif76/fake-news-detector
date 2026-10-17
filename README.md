@@ -1,178 +1,115 @@
-# TruthLens: AI-Based Fake News Detection System
-
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg?style=flat&logo=fastapi)](https://fastapi.tiangolo.com)
-[![React](https://img.shields.io/badge/Frontend-React_19-61DAFB.svg?style=flat&logo=react)](https://react.dev)
-[![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind_CSS_v4-38B2AC.svg?style=flat&logo=tailwind-css)](https://tailwindcss.com)
-[![Scikit-Learn](https://img.shields.io/badge/ML-Scikit--Learn-F7931E.svg?style=flat&logo=scikit-learn)](https://scikit-learn.org)
-[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg?style=flat&logo=python)](https://www.python.org)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-
-An end-to-end, production-grade Artificial Intelligence and Natural Language Processing web system designed to identify digital misinformation, calculate prediction confidence scores, and provide local model explainability. Developed as a **B.Tech Computer Science and Engineering Capstone Final-Year Project**.
-
----
-
-## 🌟 Key Features
-
-1. **Sub-50ms Real-Time Inference**: Powered by asynchronous Python FastAPI and a pre-warmed serialized machine learning pipeline.
-2. **Transparent Local Model Explainability (XAI)**: Exposes the exact weighted NLP tokens and n-grams that swayed the model's classification toward Real or Fake news.
-3. **Multi-Model Benchmark Evaluation**: Rigorous evaluation of **Logistic Regression**, **Multinomial Naive Bayes**, and **PassiveAggressiveClassifier** optimized for the F1-Score.
-4. **Human-in-the-Loop Feedback Loop**: Users can mark predictions as Correct or Incorrect, providing real-time accuracy telemetry.
-5. **Administrative Telemetry Dashboard**: Complete live analytics covering detection counts, traffic class distributions, and one-click CSV dataset exports for model retraining.
-6. **Enterprise Security & Reliability**: JWT Bearer token authentication, bcrypt password hashing, in-memory sliding-window IP rate limiting, and strict Pydantic schema validation.
-
----
-
-## 🏗️ System Architecture
-
-```mermaid
-graph LR
-    A["👤 User / React 19 Frontend"] -->|POST /api/predict| B["⚡ FastAPI Backend Engine"]
-    B --> C["🧹 NLTK Regex & Lemmatizer"]
-    C --> D["📐 TF-IDF Vectorizer (10,000 N-Grams)"]
-    D --> E["🤖 Champion Classifier (Logistic Regression)"]
-    E --> F["🔍 Local Token Explainability Extractor"]
-    F --> G["💾 SQLite Relational Database"]
+TruthLens — AI-Based Fake News Detection System
+TruthLens is a web application that uses Natural Language Processing (NLP) and machine learning to classify submitted news text as Real News or Fake News. It combines a React-based frontend with a Python FastAPI backend and a TF-IDF + Logistic Regression classification pipeline.
+Important: A model prediction is not proof that a claim is true or false. Use TruthLens as an initial screening tool and verify important claims with reliable, independent sources.
+✨ Features
+News-text classification — predicts whether submitted text is likely to be real or fake.
+Confidence score — displays the model's confidence information with the result.
+TF-IDF text representation — converts text into numerical features for machine learning.
+Logistic Regression model — the classifier loaded by the current backend setup.
+Web interface — a modern frontend for submitting and reviewing text predictions.
+FastAPI backend — serves the prediction functionality and provides interactive API documentation.
+Machine-learning pipeline — project scripts and dependencies are organized separately under ml_pipeline/.
+Local development support — run the frontend and backend separately on your computer.
+🧰 Tech Stack
+Component
+Technology
+Frontend
+React, Vite, JavaScript, Tailwind CSS
+Backend
+Python, FastAPI, Uvicorn
+Machine Learning
+scikit-learn, TF-IDF, Logistic Regression
+Data / local storage
+SQLite (project database file)
+Version control
+Git and GitHub
+🏗️ How It Works
+flowchart TD
+    A[User enters news text] --> B[React frontend]
+    B --> C[FastAPI backend]
+    C --> D[Text preprocessing]
+    D --> E[TF-IDF vectorizer]
+    E --> F[Logistic Regression classifier]
+    F --> G[Prediction and confidence information]
     G --> B
-    B -->|JSON Response| A
-```
-
----
-
-## 🚀 Quick-Start Local Setup
-
-### Prerequisites
-*   **Python**: Version 3.10 to 3.13
-*   **Node.js**: Version 18+ and `npm`
-
----
-
-### Step 1: Clone & Initialize Environment
-```powershell
-# Navigate into project root
+📁 Project Structure
+fake-news-detector/
+├── backend/
+│   ├── app/                 # FastAPI application
+│   ├── saved_models/        # Saved model/vectorizer files
+│   ├── requirements.txt     # Backend Python dependencies
+│   ├── .env.example         # Example environment configuration, if present
+│   └── ...
+├── frontend/
+│   ├── src/                 # Frontend source code
+│   ├── public/              # Static assets
+│   ├── package.json         # Frontend dependencies and scripts
+│   └── ...
+├── ml_pipeline/
+│   ├── src/                 # Dataset preparation and training scripts
+│   └── ...
+├── docs/                    # Project and viva documentation
+└── README.md
+✅ Prerequisites
+Python 3.10 or a version supported by the packages in backend/requirements.txt
+Node.js and npm (Node.js 18+ recommended)
+Git
+🚀 Run Locally
+Run the backend and frontend in separate terminal windows.
+1. Clone the repository
+git clone https://github.com/iamatif76/fake-news-detector.git
 cd fake-news-detector
-
-# Create and activate virtual environment
-python -m venv venv
-.\venv\Scripts\Activate.ps1   # On Windows
-# source venv/bin/activate    # On Linux / macOS
-```
-
----
-
-### Step 2: Machine Learning Pipeline & Data Preparation
-```powershell
-# 1. Install ML dependencies
-pip install -r ml_pipeline/requirements_ml.txt
-
-# 2. Run Data Preprocessing and Exploratory Data Analysis (EDA)
-# Note: If Kaggle CSVs (Fake.csv, True.csv) are not in ml_pipeline/data/raw/, 
-# an authentic 300-sample balanced dataset is automatically initialized!
-python ml_pipeline/src/prepare_dataset.py
-
-# 3. Train, Evaluate & Serialize Models
-python ml_pipeline/src/train.py
-```
-
-*Generated artifacts are automatically saved into `ml_pipeline/saved_models/` and copied to `backend/saved_models/`.*
-
----
-
-### Step 3: Run the FastAPI Backend
-```powershell
-# 1. Install Backend dependencies
-pip install -r backend/requirements.txt
-
-# 2. Start the FastAPI ASGI server
+2. Set up and start the backend
+From the repository root:
 cd backend
-python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-* Backend Root: [http://localhost:8000](http://localhost:8000)
-* Interactive Swagger API Docs: [http://localhost:8000/docs](http://localhost:8000/docs)
-* Health Check: [http://localhost:8000/health](http://localhost:8000/health)
-
----
-
-### Step 4: Run the React + Tailwind Frontend
-Open a new terminal window:
-```powershell
-cd fake-news-detector/frontend
-
-# Install node dependencies
+python -m venv venv
+Activate the virtual environment if you want to use it.
+Windows PowerShell:
+.\venv\Scripts\Activate.ps1
+macOS / Linux:
+source venv/bin/activate
+Install the backend dependencies:
+pip install -r requirements.txt
+Start the API server:
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8001
+When startup completes, open:
+API root: http://127.0.0.1:8001
+Swagger UI: http://127.0.0.1:8001/docs
+ReDoc: http://127.0.0.1:8001/redoc
+If port 8001 is already in use, choose another available port and keep the frontend's API configuration in sync.
+3. Set up and start the frontend
+Open a second terminal from the repository root:
+cd frontend
 npm install
-
-# Start Vite development server
 npm run dev
-```
-
-* Frontend Application: [http://localhost:5173](http://localhost:5173)
-
----
-
-## 📡 REST API Reference
-
-| Method | Endpoint | Description | Access |
-| :--- | :--- | :--- | :--- |
-| `POST` | `/api/auth/register` | Registers a new user account with bcrypt hashing | Public |
-| `POST` | `/api/auth/login` | Authenticates credentials and returns signed JWT token | Public |
-| `GET` | `/api/auth/me` | Returns profile of currently authenticated user | Authenticated |
-| `POST` | `/api/predict` | Analyzes article text, returns prediction, confidence & tokens | Public (Rate Limited) |
-| `POST` | `/api/feedback` | Submits user accuracy feedback (CORRECT / INCORRECT) | Public |
-| `GET` | `/api/history` | Returns personal history (or public logs if guest) | Public / User |
-| `GET` | `/api/admin/stats` | Aggregates detection counts, satisfaction rate & model metrics | Public / Admin |
-| `GET` | `/api/admin/export` | Generates and downloads a CSV export of all predictions | Public / Admin |
-| `GET` | `/health` | Server and ML model health check status | Public |
-
----
-
-## 🧪 College Evaluation Demo Samples
-
-You can click the **Quick Demo Test Cases** buttons directly on the `/analyze` page during your viva presentation:
-
-| Sample Category | Headline / Snippet Preview | Expected Result | Confidence |
-| :--- | :--- | :---: | :---: |
-| **Real (Economy)** | *"Federal Reserve held benchmark interest rates unchanged on Wednesday..."* | `REAL NEWS` | `> 88%` |
-| **Fake (Conspiracy)** | *"URGENT BOMBSHELL: Secret underground weather lab operating beneath airport..."* | `FAKE NEWS` | `> 92%` |
-| **Real (Space Science)** | *"NASA James Webb Space Telescope transmitted unprecedented high-resolution imagery..."* | `REAL NEWS` | `> 90%` |
-| **Fake (Medical Hoax)** | *"BIG PHARMA PANIC: Doctors banned secret jungle fruit that erases all cancer..."* | `FAKE NEWS` | `> 95%` |
-
----
-
-## ☁️ Deployment Instructions
-
-### 1. Deploy Backend on Render / Railway
-1. Push your repository to GitHub.
-2. In Render, create a new **Web Service** connected to your repository.
-3. Configure settings:
-   * **Root Directory**: `backend`
-   * **Build Command**: `pip install -r requirements.txt`
-   * **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
-4. Set Environment Variables:
-   * `SECRET_KEY`: `<your_random_jwt_secret>`
-   * `DATABASE_URL`: `sqlite:///./fake_news.db`
-   * `CORS_ORIGINS`: `https://your-frontend-domain.vercel.app`
-
-### 2. Deploy Frontend on Vercel
-1. In Vercel, import your repository.
-2. Configure settings:
-   * **Root Directory**: `frontend`
-   * **Framework Preset**: `Vite`
-   * **Build Command**: `npm run build`
-   * **Output Directory**: `dist`
-3. Set Environment Variable:
-   * `VITE_API_URL`: `https://your-backend-service.onrender.com/api`
-
----
-
-## 📚 Academic Documentation & Viva Materials
-
-Full academic documentation files are available in the [`docs/`](docs/) directory:
-*   [`docs/final_year_project_report_outline.md`](docs/final_year_project_report_outline.md): Complete 10-chapter report blueprint with 250-word abstract and test case matrix.
-*   [`docs/viva_questions_and_answers.md`](docs/viva_questions_and_answers.md): 20 comprehensive examiner questions and detailed model answers.
-*   [`docs/demo_script_and_test_cases.md`](docs/demo_script_and_test_cases.md): 3-minute timed live viva presentation script and 10 test case texts.
-*   [`docs/architecture_diagrams.md`](docs/architecture_diagrams.md): Mermaid high-level architecture, NLP pipeline sequence, and database ER diagrams.
-
----
-
-## 📄 License
-This project is open-source and distributed under the [MIT License](LICENSE).
+Open the local URL printed by Vite in the terminal. It is commonly http://localhost:5173, but Vite may choose another port if that one is busy.
+4. Configure the frontend API address
+Make sure the frontend sends requests to the backend address you started above. Check the existing frontend configuration and use the environment-variable name expected by the source code. Do not add a guessed variable name without checking the code.
+🧪 Machine-Learning Pipeline
+The repository includes a separate ml_pipeline/ directory for dataset preparation and model training. If you want to retrain the model, first review the scripts and requirements in that directory.
+Typical commands documented in the project are:
+pip install -r ml_pipeline/requirements_ml.txt
+python ml_pipeline/src/prepare_dataset.py
+python ml_pipeline/src/train.py
+These steps may require a suitable dataset and compatible dependencies. If the saved model files already exist in backend/saved_models/, you may be able to run the backend without retraining.
+📡 API Documentation
+While the backend is running, visit http://127.0.0.1:8001/docs to see the endpoints exposed by the current FastAPI application and try requests interactively.
+The project README previously documented routes for prediction, authentication, feedback, history, and administrative statistics/export. Treat the live /docs page and the backend route definitions as the source of truth for which endpoints are currently implemented and what access controls they use.
+🧠 Model Limitations
+Predictions depend on the quality, coverage, and balance of the training data.
+A model confidence score is not the same as a verified probability that a claim is true.
+The model can misclassify satire, opinions, breaking news, unfamiliar topics, or text that differs from its training data.
+The application does not replace independent fact-checking or trusted news sources.
+Evaluate the model on a separate test set before making claims about accuracy or real-world performance.
+🔐 Security Notes
+Keep API keys, passwords, tokens, and other secrets out of source code and public GitHub commits.
+Store local secrets in an untracked .env file when the application requires them; use example configuration files for documentation.
+Do not publish real credentials in this README, screenshots, or issue reports.
+If a secret has been committed to a public repository, revoke or rotate it.
+📚 Academic Documentation
+The repository includes a docs/ directory for supporting project documentation and viva preparation. Open that folder in GitHub to review the files available in the current repository.
+👤 Author
+Atif Ali
+GitHub: https://github.com/iamatif76
+📄 License
+Check the repository for a LICENSE file to confirm the applicable license before redistributing or reusing this project.
